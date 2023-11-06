@@ -16,6 +16,8 @@ CREATE TABLE users(
     email VARCHAR(255) UNIQUE NOT NULL,
     password CHAR(60) NOT NULL,
     roleID INT NOT NULL,
+    confirmated INT NOT NULL DEFAULT 0,
+    token CHAR(36),
     FOREIGN KEY (roleID) REFERENCES roles(roleID)
 );
 
