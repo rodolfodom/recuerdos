@@ -42,7 +42,7 @@ const User = db.define('User', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    confimated: {
+    confirmated: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
         allowNull: false,
