@@ -29,20 +29,7 @@ Directory.belongsTo(Directory, {
 });
 
 
-Directory.belongsTo(User, {
-    foreignKey: 'userID',
-    allowNull: false,
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
-});
 
-
-User.hasMany(Directory,{
-    foreignKey: 'userID',
-    allowNull: false,
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
-});
 
 
 

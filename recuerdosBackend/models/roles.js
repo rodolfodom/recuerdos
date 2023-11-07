@@ -6,7 +6,7 @@ const Role = db.define('Role', {
     roleID: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        incrementMe: true
+        autoIncrement: true
     },
     name: {
         type: DataTypes.STRING(50),
@@ -15,19 +15,5 @@ const Role = db.define('Role', {
     }
 })
 
-Role.hasMany(User, {
-    foreignKey: 'roleID',
-    allowNull: false,
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
-});
-
-
-User.belongsTo(Role, {
-    foreignKey: 'roleID',
-    allowNull: false,
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
-});
 
 export default Role

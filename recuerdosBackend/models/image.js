@@ -18,19 +18,7 @@ const Image = db.define('Image', {
     }
 })
 
-Image.belongsTo(Directory, {
-    foreignKey: 'directoryID',
-    allowNull: false,
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
-});
 
-Directory.hasMany(Image, {
-    foreignKey: 'directoryID',
-    allowNull: false,
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
-});
 
 
 export default Image
