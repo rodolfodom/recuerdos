@@ -1,5 +1,10 @@
+import { Container, TextField } from "@mui/material";
+
 export default function UserPage(){
     return(
-        <h1>UserPage</h1>
+        <Container component="form" maxWidth="xs">
+            <TextField label="Nombre" />
+            <input type="file" name="image" id="imageinput" />
+        </Container>
     )
 }

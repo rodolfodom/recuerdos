@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,22 +10,52 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import logInUser from '../services/logInUser';
+import { useNavigate } from 'react-router-dom';
+import { CircularProgress, Alert } from '@mui/material';
+import { useEffect, useState } from 'react';
 
 
 
 export default function LogInPage() {
-  const handleSubmit = (event) => {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
+    const [authenticated, setAuthenticated] = useState(false);
+    const navigate = useNavigate();
+  
+    const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    setLoading(true)
+    const data = {
+        email: event.target.email.value,
+        password: event.target.password.value
+    }
+    
+    try{
+        const responseData = await logInUser(data);
+        console.log(responseData);
+        document.cookie = `authToken=${responseData.token}`
+        setAuthenticated(true)
+    }catch(error){
+        console.log(error);
+        setError(true)
+    }finally{
+        setLoading(false)
+    }   
   };
+
+
+  useEffect(() => {
+    if(authenticated){
+        navigate("/user")
+    }
+  }, [authenticated]);
+
 
   return (
     
       <Container component="main" maxWidth="xs">
+        {error && <Alert severity="error">No se ha podido iniciar sesión</Alert>}
         <CssBaseline />
         <Box
           sx={{
@@ -48,8 +77,8 @@ export default function LogInPage() {
               required
               fullWidth
               id="email"
-              label="Email Address"
-              name="Correo electrónico"
+              label="Correo Electrónico"
+              name="email"
               autoComplete="email"
               autoFocus
             />
@@ -68,8 +97,9 @@ export default function LogInPage() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={loading}
             >
-              Iniciar sessión
+              {loading? <CircularProgress size="1.5rem"/>:"Iniciar sessión"}
             </Button>
             <Grid container>
               <Grid item xs>

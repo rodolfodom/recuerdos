@@ -22,13 +22,13 @@ app.use(express.urlencoded({extended: true}))
 app.listen(port, async () => {
     try{
         await db.authenticate()
-        await db.sync({force: true})
+        //await db.sync({force: true})
         console.log('base de datos lista')
-        const adminRole = Role.build({name: "administrator"})
-        const generalRole = Role.build({name: "general"})
+        //const adminRole = Role.build({name: "administrator"})
+        //const generalRole = Role.build({name: "general"})
 
-        await adminRole.save()
-        await generalRole.save()
+        //await adminRole.save()
+        //await generalRole.save()
     }catch(error){
         console.log('error de base de datos')
         console.log(error)

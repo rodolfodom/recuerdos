@@ -12,15 +12,21 @@ export default async function logInController(req, res){
         const user = await User.findOne({where: {email}})
         
 
-        if(!user || !bcrypt.compareSync(password, user.password)) res.status(401).json({msg: "Credenciales inválidas"})
+        if(!user || !bcrypt.compareSync(password, user.password)){
+            res.status(401).json({msg: "Credenciales inválidas"})
+        }else if(!user.confirmated) {
+            res.status(401).json({msg: 'La cuenta no ha sido confirmada'})
+        }else{
+            
+            const token = jwt.sign({userID: user.userID}, process.env.JWT_SECRET, {
+                expiresIn: '1h'
+            })
+    
+            res.status(200)
+            .cookie('tokenAuth', token)
+            .json({token})
+        }
 
-        if(!user.confirmated) res.status(401).json({msg: 'La cuenta no ha sido confirmada'})
-
-        const token = jwt.sign({userID: user.userID}, process.env.JWT_SECRET, {
-            expiresIn: '1h'
-        })
-
-        res.status(200).json({token})
 
     }catch(error){
         console.log(error)
