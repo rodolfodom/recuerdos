@@ -9,6 +9,10 @@ const passwordRegExp =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!.]).{8,}$/;
 
 export default async function signUpController(req, res) {
+
+  console.log(req.body)
+
+
   try {
     if (!passwordRegExp.test(req.body.password)) {
       throw new Error("La contraseña no cumple los requisitos", {
@@ -31,7 +35,7 @@ export default async function signUpController(req, res) {
       },
     };
 
-    const confirmationLink = `${process.env.ORIGIN}/user/confirmation/${newUser.get('token')}`;
+    const confirmationLink = `${process.env.FRONT_ORIGIN}/user/confirmation/${newUser.get('token')}`;
     var transport = nodemailer.createTransport({
       host: process.env.MAIL_HOST,
       port: process.env.MAIL_PORT,

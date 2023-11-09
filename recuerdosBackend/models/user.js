@@ -1,6 +1,6 @@
 import db from "../config/db.js";
 import { DataTypes, UUIDV4} from "sequelize";
-import Role from "./roles.js";
+
 
 const User = db.define('User', {
     userID: {

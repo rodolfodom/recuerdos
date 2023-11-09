@@ -1,6 +1,5 @@
 import db from "../config/db.js";
 import { DataTypes} from "sequelize";
-import Directory from "./directory.js";
 
 const Image = db.define('Image', {
     imageID: {
@@ -11,10 +10,9 @@ const Image = db.define('Image', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    url: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
+    description: {
+        type: DataTypes.TEXT,
+        allowNull: true
     }
 })
 
