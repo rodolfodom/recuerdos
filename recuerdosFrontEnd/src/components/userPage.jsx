@@ -1,10 +1,12 @@
 import { Container, TextField } from "@mui/material";
+import MenuAppBar from "./appbar";
+import UploadPhotoForm from "./uploadPhotoForm";
 
 export default function UserPage(){
     return(
-        <Container component="form" maxWidth="xs">
-            <TextField label="Nombre" />
-            <input type="file" name="image" id="imageinput" />
-        </Container>
+        <>
+            <MenuAppBar/>
+            <UploadPhotoForm/>
+        </>
     )
 }
