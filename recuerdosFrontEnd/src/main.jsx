@@ -12,6 +12,7 @@ import '@fontsource/roboto/700.css';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import ConfirmationPage from './components/confirmationPage';
+import { CookiesProvider } from 'react-cookie';
 
 
 const theme = createTheme({
@@ -51,9 +52,11 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.Fragment>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <RouterProvider router={router}/>
-    </ThemeProvider>
+    <CookiesProvider defaultSetOptions={{path: '/'}}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <RouterProvider router={router}/>
+      </ThemeProvider>
+    </CookiesProvider>
   </React.Fragment>,
 )

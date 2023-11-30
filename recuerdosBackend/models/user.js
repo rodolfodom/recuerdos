@@ -53,6 +53,7 @@ const User = db.define('User', {
         unique: true,
         allowNull: true
     }
+    
 })
 
 

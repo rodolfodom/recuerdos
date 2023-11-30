@@ -5,7 +5,7 @@ import logInController from "../controllers/user/logiInController.js";
 
 const userRouter = Router()
 
-userRouter.post('/signup', signUpController);
+userRouter.post('/signup', signUpController)
 userRouter.get('/confirmation/:token', confirmationController)
 userRouter.post('/login', logInController)
 

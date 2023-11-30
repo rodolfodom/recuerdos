@@ -1,7 +1,8 @@
-import User from "../../models/user.js"
+import {User, Directory} from "../../models/index.js"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 import dotenv from "dotenv"
+
 
 dotenv.config()
 
@@ -17,15 +18,29 @@ export default async function logInController(req, res){
         }else if(!user.confirmated) {
             res.status(401).json({msg: 'La cuenta no ha sido confirmada'})
         }else{
+            const rootDirectory = await Directory.findOne({
+                where: {
+                    userID: user.userID,
+                    name: 'root',
+                    containerDirectoryID: null
+                }
+            })
+
             
-            const token = jwt.sign({userID: user.userID}, process.env.JWT_SECRET, {
+            
+            const authToken = jwt.sign({userID: user.userID}, process.env.JWT_SECRET, {
                 expiresIn: '1h'
             })
+
     
             res.status(200)
-            .cookie('tokenAuth', token)
-            .json({token})
-        }
+            .cookie('tokenAuth', authToken)
+            .cookie('rootDirectory', rootDirectory.directoryID)
+            .json({
+                authToken, 
+                rootDirectory: rootDirectory.directoryID
+            })
+            }
 
 
     }catch(error){

@@ -2,50 +2,64 @@ import Role from "./roles.js";
 import User from "./user.js";
 import Directory from "./directory.js";
 import Image from "./image.js";
+import { QueryInterface } from "sequelize";
 
 Role.hasMany(User, {
-    foreignKey: 'roleID',
+  foreignKey: {
+    name: "roleID",
     allowNull: false,
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
+  },
+  sourceKey: "roleID",
 });
-
 
 User.belongsTo(Role, {
-    foreignKey: 'roleID',
+  foreignKey: {
+    name: "roleID",
     allowNull: false,
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
+  },
+  sourceKey: "roleID",
 });
-
 
 Directory.belongsTo(User, {
-    foreignKey: 'userID',
+  foreignKey: {
+    name: "userID",
     allowNull: false,
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
+  },
+  sourceKey: "userID",
 });
 
-
-User.hasMany(Directory,{
-    foreignKey: 'userID',
+User.hasMany(Directory, {
+  foreignKey: {
+    name: "userID",
     allowNull: false,
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
+  },
+  sourceKey: "userID",
 });
 
 Image.belongsTo(Directory, {
-    foreignKey: 'directoryID',
+  foreignKey: {
+    name: "directoryID",
     allowNull: false,
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
+  },
+  sourceKey: "directoryID",
 });
 
 Directory.hasMany(Image, {
-    foreignKey: 'directoryID',
+  foreignKey: {
+    name: "directoryID",
     allowNull: false,
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
+  },
+  sourceKey: "directoryID",
 });
 
-export {Role, User, Directory, Image}
+Directory.hasMany(Directory, {
+  foreignKey: "containerDirectoryID",
+  sourceKey: "directoryID",
+});
+
+Directory.belongsTo(Directory, {
+  foreignKey: "containerDirectoryID",
+  sourceKey: "directoryID",
+});
+
+export { Role, User, Directory, Image };

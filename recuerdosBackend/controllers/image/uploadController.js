@@ -16,7 +16,7 @@ const s3 = new S3Client({
 
 export default async function uploadController(req, res){
 
-    const {description, name, containerDirectoryID} = req.body
+    const {description, name, directoryID} = req.body
 
 
     const imageID = uuidv4()
@@ -28,14 +28,15 @@ export default async function uploadController(req, res){
     })
 
     try{
-        const container = await Directory.findByPk(containerDirectoryID)
+        const container = await Directory.findByPk(directoryID)
         if(container === null) throw new Error("El directorio no existe")
         await s3.send(command)
-        const newImage = Image.build({description, name, imageID, containerDirectoryID})
+        const newImage = Image.build({description, name, imageID, directoryID})
         await newImage.save()
         res.status(200).json({success: true, msg: "imagen cargada exitosamente"})
 
     }catch(error){
+        console.log(error)
         res.status(400).json({success: false, msg: error.message})
     }
     

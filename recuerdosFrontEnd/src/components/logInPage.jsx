@@ -14,6 +14,8 @@ import logInUser from '../services/logInUser';
 import { useNavigate } from 'react-router-dom';
 import { CircularProgress, Alert } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
+
 
 
 
@@ -22,6 +24,7 @@ export default function LogInPage() {
     const [error, setError] = useState(false);
     const [authenticated, setAuthenticated] = useState(false);
     const navigate = useNavigate();
+    const [cookies, setCookie] = useCookies(['authToken', 'rootDirectory']);
   
     const handleSubmit = async (event) => {
     event.preventDefault();
@@ -30,11 +33,12 @@ export default function LogInPage() {
         email: event.target.email.value,
         password: event.target.password.value
     }
-    
     try{
         const responseData = await logInUser(data);
-        console.log(responseData);
-        document.cookie = `authToken=${responseData.token}`
+        const {authToken, rootDirectory} = responseData;
+        setCookie('authToken', authToken, {path: '/'});
+        setCookie('rootDirectory', rootDirectory, {path: '/'});
+        //console.log(cookies);
         setAuthenticated(true)
     }catch(error){
         console.log(error);
