@@ -33,7 +33,7 @@ export default async function download(req, res){
         
         const response = await axios.get(`${process.env.CLOUDFRONT_DISTRIBUTION}/${image.imageID}`, { responseType: 'arraybuffer' });
 
-        archive.append(response.data, {name: `${image.imageID}.png`})
+        archive.append(response.data, {name: `${image.name}`})
         await archive.finalize()
 
         res.attachment(`${image.imageID}.zip`)

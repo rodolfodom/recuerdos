@@ -19,6 +19,7 @@ export default function ImageModal({ open, setOpen, currentDirectory, update }) 
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
+        
         setImageToSend(file);
 
         if (file) {
@@ -36,8 +37,9 @@ export default function ImageModal({ open, setOpen, currentDirectory, update }) 
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        const extension = imageToSend.name.split('.').pop();
         const formData = new FormData();
-        formData.append('name', name);
+        formData.append('name', `${name}.${extension}`);
         formData.append('description', description);
         formData.append('image', imageToSend);
         formData.append('directoryID', currentDirectory);

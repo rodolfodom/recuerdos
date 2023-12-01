@@ -18,7 +18,6 @@ export default async function uploadController(req, res){
 
     const {description, name, directoryID} = req.body
 
-
     const imageID = uuidv4()
     const command = new PutObjectCommand({
         Bucket: bucketName,
@@ -31,7 +30,11 @@ export default async function uploadController(req, res){
         const container = await Directory.findByPk(directoryID)
         if(container === null) throw new Error("El directorio no existe")
         await s3.send(command)
-        const newImage = Image.build({description, name, imageID, directoryID})
+        const newImage = Image.build({
+            description,
+            name,
+            imageID,
+            directoryID})
         await newImage.save()
         res.status(200).json({success: true, msg: "imagen cargada exitosamente"})
 

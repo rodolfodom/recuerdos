@@ -2,6 +2,7 @@ import { CircularProgress, Container, Typography } from "@mui/material";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import CONSTANTS from "../CONSTANTS";
 
 
 export default function ConfirmationPage() {
@@ -11,7 +12,7 @@ export default function ConfirmationPage() {
     useEffect(() => {
         (async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/user/confirmation/${token}`);
+                const response = await axios.get(`${CONSTANTS.API_URL}/user/confirmation/${token}`);
                 console.log(response.data);
                 setSuccess(response.data.success);
             } catch (error) {

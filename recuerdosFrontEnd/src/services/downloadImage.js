@@ -3,7 +3,7 @@ import CONSTANTS from "../CONSTANTS.js";
 
 
 export default function downloadImage(imageId, authToken) {
-    axios.get(`${CONSTANTS.API_URL}image/download/${imageId}`, {
+    axios.get(`${CONSTANTS.API_URL}/image/download/${imageId}`, {
         headers: {
             'Authorization': authToken,
         },

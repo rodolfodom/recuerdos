@@ -8,14 +8,16 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import { useState, useEffect } from 'react';
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function MenuAppBar() {
   const [auth, setAuth] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [cookies, setCookie, removeCookie] = useCookies(['authToken', 'rootDirectory']);
+  const navigate = useNavigate();
 
-  const handleChange = (event) => {
-    setAuth(event.target.checked);
-  };
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -24,6 +26,13 @@ export default function MenuAppBar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const logOut = async () => {
+    removeCookie('authToken');
+    removeCookie('rootDirectory');
+    navigate('/login');
+  }
+
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -68,7 +77,7 @@ export default function MenuAppBar() {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Cerrar sesión</MenuItem>
+                <MenuItem onClick={logOut}>Cerrar sesión</MenuItem>
               </Menu>
             </div>
           )}
