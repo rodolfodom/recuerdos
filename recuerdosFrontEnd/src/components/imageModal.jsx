@@ -1,16 +1,17 @@
-import { Dialog, DialogActions, DialogContent, Button, DialogTitle, DialogContentText, TextField, Box } from "@mui/material"
+import { Dialog, DialogActions, DialogContent, Button, DialogTitle, DialogContentText, TextField, Box, CircularProgress } from "@mui/material"
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import uploadImage from "../services/uploadImage";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
 
 
-export default function ImageModal({ open, setOpen, currentDirectory }) {
+export default function ImageModal({ open, setOpen, currentDirectory, update }) {
     const [image, setImage] = useState(null)
     const [imageToSend, setImageToSend] = useState(null)
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
     const [cookies] = useCookies(['cookie-name']);
+    const [loading, setLoading] = useState(false)
 
     const handleClose = () => {
         setOpen(false)
@@ -41,15 +42,20 @@ export default function ImageModal({ open, setOpen, currentDirectory }) {
         formData.append('image', imageToSend);
         formData.append('directoryID', currentDirectory);
 
-        console.log("*********************** fromData ***********************");
-        console.log(formData.get('name'));
-        console.log(formData.get('description'));
-        console.log(formData.get('directoryID'));
+        //console.log("*********************** fromData ***********************");
+        //console.log(formData.get('name'));
+        //console.log(formData.get('description'));
+        //console.log(formData.get('directoryID'));
         try {
+            setLoading(true)
             const response = await uploadImage(formData, cookies.authToken);
-            console.log(response.msg);
+            //console.log(response.msg);
+            handleClose()
+            update()
         }catch(error){
             console.log(error);
+        }finally{
+            setLoading(false)
         }
     }
 
@@ -73,7 +79,6 @@ export default function ImageModal({ open, setOpen, currentDirectory }) {
                     value={name}
                 />
                 <TextField
-                    autoFocus
                     margin="dense"
                     id="description"
                     label="Descripción"
@@ -109,7 +114,7 @@ export default function ImageModal({ open, setOpen, currentDirectory }) {
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Cancelar</Button>
-                <Button onClick={handleSubmit}>Subir</Button>
+                <Button onClick={handleSubmit} disabled={loading}>{loading? <CircularProgress size={20}/>:'Subir'}</Button>
             </DialogActions>
         </Dialog>
     )

@@ -20,7 +20,6 @@ const Directory = db.define("Directory", {
     },
     containerDirectoryID: {
       type: DataTypes.UUID,
-      unique: true,
       allowNull: false,
       references: {
         model: "Directories",

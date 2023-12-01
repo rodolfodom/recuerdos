@@ -10,15 +10,12 @@ import Container from '@mui/material/Container';
 import postUser from '../services/postUser';
 import { CircularProgress, Alert } from '@mui/material';
 import { useState } from 'react';
-
-
-
-
-
+import { useNavigate } from 'react-router-dom';
 
 export default function SignUpPage() {
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
   
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -35,6 +32,9 @@ export default function SignUpPage() {
 
       await postUser(data);
       setError(false)
+      setTimeout(()=>{
+        navigate('/logIn')
+      }, 5000)
     } catch (error) {
       setError(true)
     }finally{

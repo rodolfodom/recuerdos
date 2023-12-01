@@ -1,41 +1,43 @@
-SET NAMES 'UTF8MB4';
-DROP DATABASE IF EXISTS memories;
-CREATE DATABASE IF NOT EXISTS memories DEFAULT CHARACTER SET UTF8MB4;
-USE memories;
+CREATE DATABASE IF NOT EXISTS `memories`;
+USE `memories`;
 
-CREATE TABLE roles(
-    roleID INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    name VARCHAR(20) UNIQUE NOT NULL
-    );
+CREATE TABLE IF NOT EXISTS `Roles` (
+    `roleID` INTEGER AUTO_INCREMENT,
+    `name` VARCHAR(50) NOT NULL UNIQUE,
+    PRIMARY KEY (`roleID`)
+) ENGINE=InnoDB;
 
-CREATE TABLE users(
-    userID CHAR(36) PRIMARY KEY NOT NULL,
-    firstName VARCHAR(50) NOT NULL,
-    fatherLastName VARCHAR(50) NOT NULL,
-    motherLastName VARCHAR(50) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password CHAR(60) NOT NULL,
-    roleID INT NOT NULL,
-    confirmated INT NOT NULL DEFAULT 0,
-    token CHAR(36),
-    FOREIGN KEY (roleID) REFERENCES roles(roleID)
-);
+CREATE TABLE IF NOT EXISTS `Users` (
+    `userID` CHAR(36) BINARY NOT NULL,
+    `firstName` VARCHAR(255) NOT NULL,
+    `fatherLastName` VARCHAR(255) NOT NULL,
+    `motherLastName` VARCHAR(255) NOT NULL,
+    `email` VARCHAR(255) NOT NULL UNIQUE,
+    `password` VARCHAR(255) NOT NULL,
+    `confirmated` TINYINT(1) NOT NULL DEFAULT false,
+    `token` CHAR(36) BINARY UNIQUE,
+    `roleID` INTEGER NOT NULL,
+    PRIMARY KEY (`userID`),
+    FOREIGN KEY (`roleID`) REFERENCES `Roles` (`roleID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
 
-CREATE TABLE directories(
-    directoryID CHAR(36) PRIMARY KEY NOT NULL,
-    name VARCHAR(50) NOT NULL,
-    containerDirectoryID CHAR(36) NOT NULL,
-    userID CHAR(36) NOT NULL,
-    FOREIGN KEY (containerDirectoryID) REFERENCES directories(directoryID),
-    FOREIGN KEY (userID) REFERENCES users(userID)
-);
+CREATE TABLE IF NOT EXISTS `Directories` (
+    `directoryID` CHAR(36) BINARY NOT NULL,
+    `name` VARCHAR(255) NOT NULL,
+    `userID` CHAR(36) BINARY NOT NULL,
+    `containerDirectoryID` CHAR(36) BINARY NOT NULL,
+    PRIMARY KEY (`directoryID`),
+    FOREIGN KEY (`userID`) REFERENCES `Users` (`userID`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`containerDirectoryID`) REFERENCES `Directories` (`directoryID`) ON DELETE CASCADE ON UPDATE CASCADE,
+    UNIQUE (`name`, `userID`, `containerDirectoryID`)
+) ENGINE=InnoDB;
 
-CREATE TABLE images(
-    imageID CHAR(36) PRIMARY KEY NOT NULL,
-    name VARCHAR(100) NOT NULL,
-    directoryID CHAR(36) NOT NULL,
-    uploadDate DATETIME NOT NULL,
-    url VARCHAR(255) NOT NULL,
-    FOREIGN KEY (directoryID) REFERENCES directories(directoryID)
-);
-
+CREATE TABLE IF NOT EXISTS `Images` (
+    `imageID` CHAR(36) BINARY NOT NULL,
+    `name` VARCHAR(255) NOT NULL,
+    `description` TEXT,
+    `directoryID` CHAR(36) BINARY NOT NULL,
+    PRIMARY KEY (`imageID`),
+    FOREIGN KEY (`directoryID`) REFERENCES `Directories` (`directoryID`) ON DELETE CASCADE ON UPDATE CASCADE,
+    UNIQUE (`name`, `directoryID`)
+) ENGINE=InnoDB;

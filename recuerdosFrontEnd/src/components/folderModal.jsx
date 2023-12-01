@@ -3,7 +3,7 @@ import createDirectory from "../services/createDirectory"
 import { useCookies } from "react-cookie"
 import { useState, useRef } from "react"
 
-export default function FolderModal({ open, setOpen, currentDirectory}) {
+export default function FolderModal({ open, setOpen, currentDirectory, update}) {
   //console.log("Este es el direcotio actuak: " + currentDirectory)
   const [cookies] = useCookies(['authToken', 'rootDirectory']);
   const [loading, setLoading] = useState(false)
@@ -31,15 +31,16 @@ export default function FolderModal({ open, setOpen, currentDirectory}) {
       if(!response.success){
         throw new Error(response.message)
       }
+      update()
     }catch(error){
-      //console.log(error)
+      console.log(error)
     }finally{
       setLoading(false)
     }
-    
     setOpen(false)
     setDirectoryName('')
     handleClose()
+    
   }
 
   return (

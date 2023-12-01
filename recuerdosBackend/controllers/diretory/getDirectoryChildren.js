@@ -16,17 +16,31 @@ export default async function getDirectoryChildren(req, res) {
     const childrenDirectories = await Directory.findAll({
       where: {
         containerDirectoryID: directory.directoryID
-      }
+      },
+      order:[
+        ['name', 'ASC']
+      ]
     })
     
+    
+
+
     const childrenImages = await Image.findAll({
       where: {
         directoryID: directory.directoryID
-      }
+      },
+      order:[
+        ['name', 'ASC']
+      ]
     })
 
     const childrenDirectoriesJson = childrenDirectories.map(dir => dir.toJSON())
-    const childrenImagesJson = childrenImages.map(img => img.toJSON())
+    
+    const childrenImagesJson = childrenImages.map(img => {
+      const imgJson = img.toJSON()
+      imgJson["url"] = `${process.env.CLOUDFRONT_DISTRIBUTION}/${imgJson.imageID}`
+      return imgJson
+    })
 
     const children = {
       images: childrenImagesJson,

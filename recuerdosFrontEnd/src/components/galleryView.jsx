@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react"
 import CustomeSpeedDial from "./speedDial"
-import { Container, CircularProgress, Typography, Card, CardMedia, CardContent, Breadcrumbs, Link } from "@mui/material"
+import { Container, CircularProgress, Typography, Card, CardMedia, Breadcrumbs, Link, IconButton } from "@mui/material"
 import ImageModal from "./imageModal";
 import FolderModal from "./folderModal";
 import getDirectoryElements from "../services/getDirectoryElements";
 import { useCookies } from "react-cookie";
-import folderIcon from "../assets/icons/folder.png"
 import FolderIcon from '@mui/icons-material/Folder';
+import { useNavigate } from "react-router-dom";
+import ImageCard from "./imageCard";
+
 
 export default function GalleryView({ currentDirectory, changeDirectory }) {
     //console.log(currentDirectory)
@@ -18,6 +20,13 @@ export default function GalleryView({ currentDirectory, changeDirectory }) {
     const [openFolderModal, setOpenFolderModal] = useState(false)
     const [cookies, setCookie] = useCookies(['authToken', 'rootDirectory']);
     const [route, setRoute] = useState([{ name: 'Mis recuerdos', id: cookies.rootDirectory }])
+    const [update, setUpdate] = useState(false)
+    const navigate = useNavigate()
+
+    const forceUpdate = () => {
+        console.log("Recargar")
+        setUpdate(!update)
+    }
 
     useEffect(() => {
 
@@ -33,8 +42,7 @@ export default function GalleryView({ currentDirectory, changeDirectory }) {
                 setDirectories(response.data.directories)
                 setImages(response.data.images)
             } catch (error) {
-                setError(true)
-                // console.log(error);
+                navigate('/logIn')
             } finally {
                 setLoading(false)
             }
@@ -43,7 +51,7 @@ export default function GalleryView({ currentDirectory, changeDirectory }) {
 
         lookForItems();
 
-    }, [currentDirectory])
+    }, [currentDirectory, update])
 
 
     if (loading) {
@@ -55,7 +63,7 @@ export default function GalleryView({ currentDirectory, changeDirectory }) {
     } else if (images.length === 0 && directories.length === 0) {
 
         return (
-            <Container maxWidth="md" sx={{ minHeight: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', py: '4rem' }}>
+            <Container maxWidth="md" sx={{ minHeight: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', py: '4rem' }}>
                 <Breadcrumbs aria-label="breadcrumb" sx={{ width: '100%', display: 'flex', justifyContent: 'flex-start', alignItems: 'center', mb: '1rem' }}>
                     {
                         route.map((directory) => {
@@ -67,11 +75,11 @@ export default function GalleryView({ currentDirectory, changeDirectory }) {
                         })
                     }
                 </Breadcrumbs>
-                <Typography variant="h4" component="h2" gutterBottom sx={{display: 'block', width: '100%'}}>
+                <Typography variant="h4" component="h2" gutterBottom align="center" sx={{ display: 'block', width: '100%' }}>
                     Esta carpeta está vacía
                 </Typography>
-                <ImageModal open={openImageModal} setOpen={setOpenImageModal} currentDirectory={currentDirectory} />
-                <FolderModal open={openFolderModal} setOpen={setOpenFolderModal} currentDirectory={currentDirectory} />
+                <ImageModal open={openImageModal} setOpen={setOpenImageModal} currentDirectory={currentDirectory} update={forceUpdate}/>
+                <FolderModal open={openFolderModal} setOpen={setOpenFolderModal} currentDirectory={currentDirectory} update={forceUpdate}/>
                 <CustomeSpeedDial openFolderModal={setOpenFolderModal} openImageModal={setOpenImageModal} />
             </Container>
         )
@@ -80,7 +88,7 @@ export default function GalleryView({ currentDirectory, changeDirectory }) {
 
     return (
 
-        <Container maxWidth="md" sx={{minHeight: '100%', position: 'relative', display: 'flex', alignContent: 'space-between', alignItems: 'stretch', flexWrap: 'wrap', p: '3rem', }}>
+        <Container maxWidth="md" sx={{ minHeight: '100%', position: 'relative', display: 'flex', alignContent: 'space-between', alignItems: 'stretch', flexWrap: 'wrap', p: '3rem', }}>
             <Breadcrumbs aria-label="breadcrumb" sx={{ width: '100%', display: 'flex', justifyContent: 'flex-start', alignItems: 'center', mb: '1rem' }}>
                 {
                     route.map((directory) => {
@@ -100,17 +108,21 @@ export default function GalleryView({ currentDirectory, changeDirectory }) {
                                 children={<FolderIcon sx={{ width: '100px', height: '100px' }} color="primary" />}
                                 sx={{ width: '100px', height: '100px' }}
                             />
-                            <CardContent sx={{ padding: 0, margin: 0 }}>
-                                <Typography variant="body" align="center" color="text" sx={{ wordBreak: 'break-word', padding: 0, m: 0 }}>
-                                    {directory.name}
-                                </Typography>
-                            </CardContent>
+                            <Typography variant="body" align="center" color="text" sx={{ wordBreak: 'break-word', pt: 2, m: 0 }}>
+                                {directory.name}
+                            </Typography>
                         </Card>
                     )
                 })
             }
-            <ImageModal open={openImageModal} setOpen={setOpenImageModal} currentDirectory={currentDirectory} />
-            <FolderModal open={openFolderModal} setOpen={setOpenFolderModal} currentDirectory={currentDirectory} />
+            {
+                images.map((image) => {
+                    console.log(image.imageID)
+                    return <ImageCard key={image.imageID} image={image}/>
+            })
+            }
+            <ImageModal open={openImageModal} setOpen={setOpenImageModal} currentDirectory={currentDirectory} update={forceUpdate}/>
+            <FolderModal open={openFolderModal} setOpen={setOpenFolderModal} currentDirectory={currentDirectory} update={forceUpdate}/>
             <CustomeSpeedDial openFolderModal={setOpenFolderModal} openImageModal={setOpenImageModal} />
         </Container>
     )

@@ -2,7 +2,7 @@ import Role from "./roles.js";
 import User from "./user.js";
 import Directory from "./directory.js";
 import Image from "./image.js";
-import { QueryInterface } from "sequelize";
+
 
 Role.hasMany(User, {
   foreignKey: {

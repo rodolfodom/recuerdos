@@ -16,7 +16,7 @@ export default function authorization(req, res, next){
         }
 
         req.userID = decoded.userID;
-        console.log("************* usuario autorizado en middleware ************")
+        //console.log("************* usuario autorizado en middleware ************")
         next();
     })
 }
