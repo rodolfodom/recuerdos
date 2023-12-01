@@ -1,9 +1,10 @@
 import axios from "axios";
+import CONSTANTS from "../CONSTANTS";
 
 export default async function uploadImage(formData, authToken) {
 
     try {
-        const response = await axios.post('http://localhost:3000/image/upload', formData, {
+        const response = await axios.post(`${CONSTANTS.API_URL}/image/upload`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': authToken,
